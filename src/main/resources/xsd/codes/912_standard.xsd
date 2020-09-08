@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:include schemaLocation="../standard_types.xsd"/>
+    <xs:complexType name="unit_unpack">
+        <xs:sequence>
+            <xs:element name="subject_id" type="sbj_location_mapping_type"/>
+            <xs:element name="operation_date" type="date_time_with_zone"/>
+            <xs:element minOccurs="0" name="external_operation_id" type="base_doc_num_type"/>
+            <xs:element name="sscc" type="sscc_base_type"/>
+            <xs:element minOccurs="0" name="is_recursive" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="state" type="state_info_sscc_gmid_type"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:include schemaLocation="../standard_types.xsd"/>
+    <xs:complexType name="release_in_circulation">
+        <xs:sequence>
+            <xs:element name="subject_id" type="sbj_location_mapping_type"/>
+            <xs:element name="operation_date" type="date_time_with_zone"/>
+            <xs:element name="release_info">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="doc_date" type="base_date_type"/>
+                        <xs:element minOccurs="0" name="doc_num" type="base_doc_num_type"/>
+                        <xs:element name="confirmation_num" type="base_doc_num_type"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="external_operation_id" type="base_doc_num_type"/>
+            <xs:element name="signs">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element name="sgtin" type="sgtin_base_type"/>
+                        <xs:element name="sscc" type="sscc_base_type"/>
+                    </xs:choice>
+                </xs:complexType>
+                <xs:unique name="ux_release_i_c_sgtin">
+                    <xs:selector xpath="signs/sgtin"/>
+                    <xs:field xpath="sgtin"/>
+                </xs:unique>
+                <xs:unique name="ux_release_i_c_sscc">
+                    <xs:selector xpath="signs/sscc"/>
+                    <xs:field xpath="sscc"/>
+                </xs:unique>
+            </xs:element>
+            <xs:element minOccurs="0" name="state" type="state_info_sscc_gmid_type"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

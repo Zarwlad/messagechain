@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+    <xs:include schemaLocation="../standard_types.xsd"/>
+    <xs:complexType name="multi_pack">
+        <xs:sequence>
+            <xs:element name="subject_id" type="sbj_location_mapping_type"/>
+            <xs:element name="operation_date" type="date_time_with_zone"> </xs:element>
+            <xs:element minOccurs="0" name="external_operation_id" type="base_doc_num_type"/>
+            <xs:choice>
+                <xs:element name="by_sgtin">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="detail" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="sscc" type="sscc_base_type"> </xs:element>
+                                        <xs:element name="content">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element maxOccurs="unbounded" name="sgtin"
+                                                  type="sgtin_base_type"> </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                                <xs:unique name="ux_multi_pack_sscc_by_sgtin">
+                                    <xs:selector xpath="detail/sscc"/>
+                                    <xs:field xpath="."/>
+                                </xs:unique>
+                                <xs:unique name="ux_multi_pack_sgtin">
+                                    <xs:selector xpath="detail/content/sgtin"/>
+                                    <xs:field xpath="."/>
+                                </xs:unique>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="by_sscc">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="detail" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="sscc" type="sscc_base_type"> </xs:element>
+                                        <xs:element name="content">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element name="sscc" type="sscc_base_type"
+                                                  maxOccurs="unbounded"> </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                                <xs:unique name="ux_multi_pack_sscc_by_sscc">
+                                    <xs:selector xpath="detail/sscc | detail/content/sscc"/>
+                                    <xs:field xpath="."/>
+                                </xs:unique>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:element maxOccurs="1" minOccurs="0" name="state" type="state_info_sscc_type">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

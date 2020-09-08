@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="../standard_types.xsd"/>
+	<xs:include schemaLocation="251_standard.xsd"/>
+	<xs:include schemaLocation="252_standard.xsd"/>
+	<xs:include schemaLocation="311_standard.xsd"/>
+	<xs:include schemaLocation="312_standard.xsd"/>
+	<xs:include schemaLocation="313_standard.xsd"/>
+	<xs:include schemaLocation="321_standard.xsd"/>
+	<xs:include schemaLocation="331_standard.xsd"/>
+	<xs:include schemaLocation="332_standard.xsd"/>
+	<xs:include schemaLocation="333_standard.xsd"/>
+	<xs:include schemaLocation="334_standard.xsd"/>
+	<xs:include schemaLocation="335-standard.xsd"/>
+	<xs:include schemaLocation="341_standard.xsd"/>
+	<xs:include schemaLocation="342_standard.xsd"/>
+	<xs:include schemaLocation="351_standard.xsd"/>
+	<xs:include schemaLocation="415_standard.xsd"/>
+	<xs:include schemaLocation="541_standard.xsd"/>
+	<xs:include schemaLocation="542_standard.xsd"/>
+	<xs:include schemaLocation="552_standard.xsd"/>
+	<xs:include schemaLocation="613-st_format.xsd"/>
+	<xs:include schemaLocation="699_standard.xsd"/>
+	<xs:include schemaLocation="701_standard.xsd"/>
+	<xs:include schemaLocation="911_standard.xsd"/>
+	<xs:include schemaLocation="912_standard.xsd"/>
+	<xs:include schemaLocation="913_standard.xsd"/>
+	<xs:include schemaLocation="914_standard.xsd"/>
+	<xs:include schemaLocation="915_standard.xsd"/>
+	<xs:include schemaLocation="fn_shipment_by_mah_gtin.xsd"/>
+	<xs:include schemaLocation="inbound_shipment.xsd"/>
+	<xs:element name="documents">
+		<xs:annotation>
+			<xs:documentation>Documents by regulator standart format</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="register_end_packing" type="register_end_packing"/>
+				<xs:element name="register_product_emission" type="register_product_emission"/>
+				<xs:element name="foreign_emission" type="foreign_emission"/>
+				<xs:element name="foreign_shipment" type="foreign_shipment"/>
+				<xs:element name="foreign_import" type="foreign_import"/>
+				<xs:element name="receive_importer" type="receive_importer"/>
+				<xs:element name="release_in_circulation" type="release_in_circulation"/>
+				<xs:element name="accept" type="accept"/>
+				<xs:element name="unit_unpack" type="unit_unpack"/>
+				<xs:element name="unit_extract" type="unit_extract"/>
+				<xs:element name="unit_append" type="unit_append"/>
+				<xs:element name="unit_pack" type="unit_pack"/>
+				<xs:element name="multi_pack" type="multi_pack"/>
+				<xs:element name="move_order" type="move_order"/>
+				<xs:element name="fts_data" type="fts_data"/>
+				<xs:element name="withdrawal" type="withdrawal"/>
+				<xs:element name="move_destruction" type="move_destruction"/>
+				<xs:element name="register_control_samples" type="register_control_samples"/>
+				<xs:element name="refusal_sender" type="refusal_sender"/>
+				<xs:element name="refusal_receiver" type="refusal_receiver"/>
+				<xs:element name="foreign_import_owner" type="foreign_import_owner"/>
+				<xs:element name="change_owner" type="change_owner"/>
+				<xs:element name="custom_move" type="custom_move"/>
+				<xs:element name="fn_shipment_by_mah_gtin" type="fn_shipment_by_mah_gtin"/>
+				<xs:element name="import_shipment" type="import_shipment"/>
+				<xs:element name="foreign_shipment_notification"
+					type="foreign_shipment_notification"/>
+				<xs:element name="destruction" type="destruction"/>
+				<xs:element name="inbound_shipment" type="inbound_shipment"/>
+			</xs:choice>
+			<xs:attribute name="version" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Версия формата</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

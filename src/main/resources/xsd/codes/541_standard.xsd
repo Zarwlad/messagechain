@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:include schemaLocation="../standard_types.xsd"/>
+    <xs:complexType name="move_destruction">
+        <xs:sequence>
+            <xs:element name="subject_id" type="sbj_location_mapping_type"> </xs:element>
+            <xs:element name="operation_date" type="date_time_with_zone"> </xs:element>
+            <xs:element name="destruction_org" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:choice>
+                            <xs:element name="fias_addr" type="sbj_location_mapping_type">
+                                <xs:annotation>
+                                    <xs:documentation/>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="addres" type="base_fias_address_type"> </xs:element>
+                        </xs:choice>
+                        <xs:choice minOccurs="0">
+                            <xs:element name="ul">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="inn" type="base_ul_inn_type"/>
+                                        <xs:element name="kpp" type="base_kpp_type"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="fl">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="inn" type="base_fl_inn_type"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="doc_num" type="base_doc_num_type" minOccurs="0"> </xs:element>
+            <xs:element name="doc_date" type="base_date_type" minOccurs="0"> </xs:element>
+            <xs:element name="act_number" type="base_doc_num_type" minOccurs="0"> </xs:element>
+            <xs:element minOccurs="0" name="external_operation_id" type="base_doc_num_type"/>
+            <xs:element name="act_date" type="base_date_type" minOccurs="0"> </xs:element>
+            <xs:element name="order_details">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="detail" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:choice>
+                                        <xs:element name="sgtin" type="sgtin_base_type"> </xs:element>
+                                        <xs:element name="sscc" type="sscc_base_type"> </xs:element>
+                                    </xs:choice>
+                                    <xs:element name="decision" type="base_doc_num_type"
+                                        minOccurs="0"> </xs:element>
+                                    <xs:element name="destruction_type"
+                                        type="base_destruction_type_type" minOccurs="0">
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:unique name="ux_move_destruction_sgtin">
+                    <xs:selector xpath="detail/sgtin"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+                <xs:unique name="ux_move_destruction_sscc">
+                    <xs:selector xpath="detail/sscc"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="state" minOccurs="0" type="state_info_sscc_gmid_type"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

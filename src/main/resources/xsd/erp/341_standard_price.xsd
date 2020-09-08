@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid Studio 2019 (https://www.liquid-technologies.com)-->
+<!-- XSD v.1.0-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="../standard_types.xsd"/>
+    <xs:element name="receive_importer">
+        <xs:complexType>
+            <xs:sequence>
+
+                <xs:element name="subject_id" type="sbj_location_mapping_type"/>
+                <xs:element minOccurs="0" name="operation_date" type="date_time_with_zone"/>
+                <xs:element name="custom_shipper_id" type="sbj_location_mapping_type" minOccurs="0"/>
+                <xs:element minOccurs="0" name="external_operation_id" type="base_doc_num_type"/>
+                <xs:element name="doc_num" type="base_doc_num_type" minOccurs="0"/>
+                <xs:element name="doc_date" type="base_date_type" minOccurs="0"/>
+                <xs:element name="invoice_num" type="base_doc_num_type" minOccurs="0"/>
+                <xs:element name="invoice_date" type="base_date_type" minOccurs="0"/>
+                <xs:element name="order_details">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="union" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="item_id" type="trade_item_mapping_type"/>
+                                        <xs:element name="series_number" type="batch_or_lot_type"/>
+                                        <xs:element name="cost_taxes" type="base_price_type"/>
+                                        <xs:element name="vat_value" type="base_price_type"/>
+                                        <xs:element minOccurs="0" name="quantity" type="xs:int"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                                <xs:unique name="unique_order_details">
+                                    <xs:selector xpath="item_id"/>
+                                    <xs:field xpath="item_id"/>
+                                    <xs:field xpath="series_number"/>
+                                </xs:unique>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

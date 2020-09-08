@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid Studio 2019 (https://www.liquid-technologies.com)-->
+<!-- XSD v.1.0-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="../standard_types.xsd"/>
+    <xs:element name="destruction">
+
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="subject_id" type="sbj_location_mapping_type"> </xs:element>
+                <xs:element name="operation_date" type="date_time_with_zone" minOccurs="0"> </xs:element>
+                <xs:element name="destruction_org">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element name="ul">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="inn" type="base_ul_inn_type"/>
+                                        <xs:element name="kpp" type="base_kpp_type"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="fl">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="inn" type="base_fl_inn_type"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="destruction_method" type="base_destruction_method_type"> </xs:element>
+                <xs:element minOccurs="0" name="external_operation_id" type="base_doc_num_type"/>
+                <xs:element name="trans_destr_act_number" type="base_doc_num_type" minOccurs="0"> </xs:element>
+                <xs:element name="trans_destr_act_date" type="base_date_type" minOccurs="0"> </xs:element>
+                <xs:element name="destruction_act_number" type="base_doc_num_type"> </xs:element>
+                <xs:element name="destruction_act_date" type="base_date_type"> </xs:element>
+                <xs:element name="order_details">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="union" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="item_id" type="trade_item_mapping_type"> </xs:element>
+                                        <xs:element name="series_number" type="batch_or_lot_type"> </xs:element>
+                                        <xs:element name="quantity" type="xs:int" minOccurs="0"
+                                            maxOccurs="1"> </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                                <xs:unique name="unique_order_details">
+                                    <xs:selector xpath="union"/>
+                                    <xs:field xpath="item_id"/>
+                                    <xs:field xpath="series_number"/>
+                                </xs:unique>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="action_id" type="xs:int" fixed="542" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

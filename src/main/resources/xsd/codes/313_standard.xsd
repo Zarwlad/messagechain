@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:include schemaLocation="../standard_types.xsd"/>
+    <xs:complexType name="register_product_emission">
+        <xs:sequence>
+            <xs:element name="subject_id" type="sbj_location_mapping_type"/>
+            <xs:element name="operation_date" type="date_time_with_zone"/>
+            <xs:element minOccurs="0" name="order_type" type="base_order_type"/>
+            <xs:element name="external_operation_id" type="base_doc_num_type" minOccurs="0"/>
+            <xs:element name="release_info" type="release_info_type" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                            <xs:element name="doc_date" type="base_date_type" minOccurs="0"/>
+                            <xs:element name="doc_num" type="base_doc_num_type" minOccurs="0"/>
+                            <xs:element name="confirmation_num" type="base_doc_num_type" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="signs">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element name="sgtin" type="sgtin_base_type"/>
+                        <xs:element name="sscc" type="sscc_base_type">
+                            <xs:annotation>
+                                <xs:documentation>Номер транспортной упаковки</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+                <xs:unique name="register_emission_sgtin">
+                    <xs:selector xpath="sgtin"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+                <xs:unique name="ux_register_emission_sscc">
+                    <xs:selector xpath="sscc"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:complexType name="gmid_type">
+        <xs:annotation>
+            <xs:documentation>List of sgting, grouped by global material id - external system's trade item id</xs:documentation>
+        </xs:annotation>
+        <xs:sequence maxOccurs="unbounded">
+            <xs:element name="series_number">
+                <xs:annotation>
+                    <xs:documentation>Batch code of GMID</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serial_numbers">
+                            <xs:annotation>
+                                <xs:documentation>SGTIN list of same Batch</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element maxOccurs="unbounded" name="sgtin" type="sgtin_base_type"></xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="id" type="batch_or_lot_type" use="required"></xs:attribute>
+                    <xs:attribute name="expiration_date" type="base_date_type" />
+                    <xs:attribute name="manufacturing_date" type="base_date_type" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="trade_item_mapping_type" use="required"></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="sscc_state_type">
+        <xs:annotation>
+            <xs:documentation>Hierarchy of SSCC which code is specified in attribute 'id'</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" name="quantity" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>Summary quantity of SGTIN in SSCC</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="GMID" type="gmid_type"></xs:element>
+                <xs:element name="sscc" type="sscc_state_type" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="id" type="sscc_base_type" use="required"></xs:attribute>
+    </xs:complexType>
+    <xs:simpleType name="sgtin_base_type">
+        <xs:annotation>
+            <xs:documentation>Standart type of SGTIN: 27 characters length, first 14 - GTIN, next 13 - unique serial number</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:length value="27" />
+            <xs:pattern value="[0-9]{14}[!-&quot;%-/0-9A-Z_a-z]{13}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="sscc_base_type">
+        <xs:annotation>
+            <xs:documentation>Standart type of SSCC: 18 characters</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{18}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="date_time_with_zone">
+        <xs:annotation>
+            <xs:documentation>DateTime + TimeZone</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:dateTime">
+            <xs:pattern value="((000[1-9])|(00[1-9][0-9])|(0[1-9][0-9]{2})|([1-9][0-9]{3}))-((0[1-9])|(1[012]))-((0[1-9])|([12][0-9])|(3[01]))T(([01][0-9])|(2[0-3]))(:[0-5][0-9]){2}(\.[0-9]+)?(([+-]((((0[0-9])|(1[0-3]))(:[0-5][0-9]))|14:00))|Z)" />
+            <xs:minInclusive value="0001-01-01T00:00:00Z" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="sbj_location_mapping_type">
+        <xs:annotation>
+            <xs:documentation>External system's id of location, used for searching in Location mapping dictionary at UTrace system</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="50" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="sbj_partner_mapping_type">
+        <xs:annotation>
+            <xs:documentation>External system's id of business partner, used for searching in Business partner mapping dictionary at UTrace system</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="50" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="trade_item_mapping_type">
+        <xs:annotation>
+            <xs:documentation>External system's id of trade item, used for searching in Trade item mapping dictionary at UTrace system</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="batch_or_lot_type">
+        <xs:annotation>
+            <xs:documentation>Batch code of trade item</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="20" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_date_type">
+        <xs:annotation>
+            <xs:documentation>Date in format DD.MM.YYYY</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="((((0[1-9]|1[0-9]|2[0-8])[\.](0[1-9]|1[012]))|((29|30|31)[\.](0[13578]|1[02]))|((29|30)[\.](0[4,6,9]|11)))[\.](19|[2-9][0-9])\d\d)|(29[\.]02[\.](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96))" />
+            <xs:length value="10" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_doc_num_type">
+        <xs:annotation>
+            <xs:documentation>Document number up to 200 characters</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\S.*" />
+            <xs:minLength value="1" />
+            <xs:maxLength value="200" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="state_info_sscc_type">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="quantity" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>Summary quantity of SGTIN in message</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="sscc" type="sscc_state_type">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="state_info_sscc_gmid_type">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="quantity" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>Summary quantity of SGTIN in message</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="GMID" type="gmid_type" />
+                <xs:element name="sscc" type="sscc_state_type"></xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="base_price_type">
+        <xs:annotation>
+            <xs:documentation>Cost</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:decimal">
+            <xs:totalDigits value="10" />
+            <xs:fractionDigits value="2" />
+            <xs:minInclusive value="0" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_turnover_type">
+        <xs:annotation>
+            <xs:documentation>Operation type of shipment from warehouse</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1" />
+            <xs:enumeration value="2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_source_type">
+        <xs:annotation>
+            <xs:documentation>Type of financing source</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1" />
+            <xs:enumeration value="2" />
+            <xs:enumeration value="3" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_contract_type">
+        <xs:annotation>
+            <xs:documentation>Contract type</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1" />
+            <xs:enumeration value="2" />
+            <xs:enumeration value="3" />
+            <xs:enumeration value="4" />
+            <xs:enumeration value="5" />
+            <xs:enumeration value="6" />
+            <xs:enumeration value="7" />
+            <xs:enumeration value="8" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="base_fts_info_type">
+        <xs:sequence>
+            <xs:element name="customs_code" type="base_fts_customs_code_type" minOccurs="0" />
+            <xs:element name="registration_date" type="base_date_type" minOccurs="0" />
+            <xs:element name="gtd_number" type="base_doc_num_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Registration number of product declaration </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="base_fts_price_type">
+        <xs:sequence>
+            <xs:element name="customs_code" type="base_fts_customs_code_type" minOccurs="0" />
+            <xs:element name="registration_date" type="base_date_type" minOccurs="1" />
+            <xs:element name="gtd_number" type="base_doc_num_type" minOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Registration number of product declaration </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="base_order_type">
+        <xs:annotation>
+            <xs:documentation>Order type</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1" />
+            <xs:enumeration value="2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_type_confirm_doc">
+        <xs:annotation>
+            <xs:documentation>Type of confirming comlpiance document </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation>1 - certificate of conformity
+2 - declaration of conformity</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="base_confnum_info_type">
+        <xs:sequence>
+            <xs:element name="confirm_doc" type="base_type_confirm_doc" />
+            <xs:element name="doc_num" type="base_doc_num_type" />
+            <xs:element name="doc_date" type="base_date_type" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="base_custom_procedure_type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="10">
+                <xs:annotation>
+                    <xs:documentation>export</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="31">
+                <xs:annotation>
+                    <xs:documentation>reexport</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="40">
+                <xs:annotation>
+                    <xs:documentation>Release for domestic consumption</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="93">
+                <xs:annotation>
+                    <xs:documentation>Destruction</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="94">
+                <xs:annotation>
+                    <xs:documentation>Abandoning in favor of the state</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_withdrawal_type">
+        <xs:restriction base="xs:int">
+            <xs:enumeration value="6">
+                <xs:annotation>
+                    <xs:documentation>selective control</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="7">
+                <xs:annotation>
+                    <xs:documentation>custom control</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="8">
+                <xs:annotation>
+                    <xs:documentation>federal control</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="9">
+                <xs:annotation>
+                    <xs:documentation>clinical research</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="10">
+                <xs:annotation>
+                    <xs:documentation>pharma expertise</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="11">
+                <xs:annotation>
+                    <xs:documentation>shortfall</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="12">
+                <xs:annotation>
+                    <xs:documentation>demo sampling selection</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="13">
+                <xs:annotation>
+                    <xs:documentation>write-off defect without destruction </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="14">
+                <xs:annotation>
+                    <xs:documentation>withdrawal of the control check marks, which are accumulated as a past of the experiment</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="15">
+                <xs:annotation>
+                    <xs:documentation>manufacturing defect</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="16">
+                <xs:annotation>
+                    <xs:documentation>write-ff of unpacked consumer packaging</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="17" />
+            <xs:enumeration value="18" />
+            <xs:enumeration value="19" />
+            <xs:enumeration value="20" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_fts_customs_code_type">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{2}|[0-9]{5}|[0-9]{8}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_fl_inn_type">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{10}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_ul_inn_type">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{8}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_kpp_type">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{7}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_destruction_method_type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation>Ampoule crushing, diluting and draining into industrial sewage</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+                <xs:annotation>
+                    <xs:documentation>Rupture, diluting and draining into industrial sewage</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+                <xs:annotation>
+                    <xs:documentation>Burning</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_destruction_type_type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation>By the owner decision</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+                <xs:annotation>
+                    <xs:documentation>By the Roszdravnadzor decision</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+                <xs:annotation>
+                    <xs:documentation>By the court decision</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="base_fias_address_type">
+        <xs:sequence>
+            <xs:element name="aoguid" type="sbj_location_mapping_type" />
+            <xs:element minOccurs="0" name="houseguid" type="sbj_location_mapping_type" />
+            <xs:element minOccurs="0" name="flat">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="1" />
+                        <xs:maxLength value="20" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="base_control_samples_type_type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation>Sampling as part of the quality control process</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+                <xs:annotation>
+                    <xs:documentation>Sampling for archive</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+                <xs:annotation>
+                    <xs:documentation>Sampling to confirm compliance with technical regulations</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_clear_string">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="1000" />
+            <xs:pattern value="\S.*" />
+            <xs:pattern value="" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="base_gtin_type">
+        <xs:restriction base="xs:string">
+            <xs:length value="14" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="export_gtin_gmid_type">
+        <xs:annotation>
+            <xs:documentation>Unique combination of GTIN + GMID (global material id - external system's trade item id)for utrace export messages</xs:documentation>
+        </xs:annotation>
+        <xs:sequence maxOccurs="unbounded">
+            <xs:element name="series_number">
+                <xs:annotation>
+                    <xs:documentation>Batch code of GMID</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence maxOccurs="unbounded">
+                        <xs:element name="serial_numbers">
+                            <xs:annotation>
+                                <xs:documentation>SGTIN list of same Batch</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element maxOccurs="unbounded" name="sgtin" type="sgtin_base_type"></xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="id" type="batch_or_lot_type" use="required"></xs:attribute>
+                    <xs:attribute name="expiration_date" type="base_date_type" use="required" />
+                    <xs:attribute name="manufacturing_date" type="base_date_type" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="gtin" type="base_gtin_type" use="required" />
+        <xs:attribute name="id" type="trade_item_mapping_type">
+            <xs:annotation>
+                <xs:documentation>GMID is mandatory for Trade item with non-empty external id parameter</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="export_sscc_state_type">
+        <xs:annotation>
+            <xs:documentation>Hierarchy of SSCC which code is specified in attribute 'id'</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="quantity" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>Summary quantity of SGTIN in SSCC</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="GMID" type="export_gtin_gmid_type"></xs:element>
+                <xs:element name="sscc" type="export_sscc_state_type" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="id" type="sscc_base_type" use="required"></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="export_state_info_type">
+        <xs:sequence>
+            <xs:element name="quantity" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>Summary quantity of SGTIN in message</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="GMID" type="export_gtin_gmid_type" />
+                <xs:element name="sscc" type="export_sscc_state_type"></xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="base_operation_type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="shipment" />
+            <xs:enumeration value="return" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="release_info_type">
+        <xs:annotation>
+            <xs:documentation>Реквизиты сведений о вводе в оборот</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="doc_date" type="base_date_type">
+                <xs:annotation>
+                    <xs:documentation>Дата записи в АИС РЗН о вводе в оборот</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="doc_num" type="base_doc_num_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Номер разрешения на ввод в оборот (обязателен для иммунобиологических ЛП)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="confirmation_num" type="base_doc_num_type">
+                <xs:annotation>
+                    <xs:documentation>Номер подтверждения соответствия требованиям гос. регистрации</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

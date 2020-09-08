@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XSD v.1.28 -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	<xs:include schemaLocation="../standard_types.xsd"/>
+	<xs:complexType name="refusal_sender">
+		<xs:sequence>
+			<xs:element name="subject_id" type="sbj_location_mapping_type"> </xs:element>
+			<xs:element name="operation_date" type="date_time_with_zone"> </xs:element>
+			<xs:element name="receiver_id" type="sbj_location_mapping_type" minOccurs="0"> </xs:element>
+			<xs:element name="reason" type="base_clear_string" minOccurs="0"> </xs:element>
+			<xs:element minOccurs="0" name="external_operation_id" type="base_doc_num_type"/>
+			<xs:element name="confirm_paused" type="xs:boolean" minOccurs="0"> </xs:element>
+			<xs:element name="order_details">
+				<xs:complexType>
+					<xs:choice maxOccurs="unbounded">
+						<xs:element name="sgtin" type="sgtin_base_type"> </xs:element>
+						<xs:element name="sscc" type="sscc_base_type"/>
+					</xs:choice>
+				</xs:complexType>
+				<xs:unique name="ux_refusal_sender_sgtin">
+					<xs:selector xpath="sgtin"/>
+					<xs:field xpath="."/>
+				</xs:unique>
+				<xs:unique name="ux_refusal_sender_sscc">
+					<xs:selector xpath="sscc"/>
+					<xs:field xpath="."/>
+				</xs:unique>
+			</xs:element>
+			<xs:element minOccurs="0" name="state" type="state_info_sscc_gmid_type"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

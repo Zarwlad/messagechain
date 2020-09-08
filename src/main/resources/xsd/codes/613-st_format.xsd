@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio Developer Edition 9.0.11.3078 (http://www.liquid-technologies.com)-->
+<!-- XSD v.1.0-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="../standard_types.xsd"/>
+    <xs:complexType name="foreign_shipment_notification">
+        <xs:sequence>
+            <xs:element name="sender_id" type="sbj_location_mapping_type">
+                <xs:annotation>
+                    <xs:documentation>Code of MAH</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="receiver_id" type="sbj_partner_mapping_type">
+                <xs:annotation>
+                    <xs:documentation>ID of receiver company</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="custom_receiver_id" type="sbj_location_mapping_type">
+                <xs:annotation>
+                    <xs:documentation>ID of custom location</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="operation_date" type="date_time_with_zone"/>
+            <xs:element name="doc_num" type="base_doc_num_type"/>
+            <xs:element name="doc_date" type="base_date_type"/>
+            <xs:element name="order_details">
+                <xs:annotation>
+                    <xs:documentation>High level codes</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element name="sgtin" type="sgtin_base_type"/>
+                        <xs:element name="sscc" type="sscc_base_type"/>
+                    </xs:choice>
+                </xs:complexType>
+                <xs:unique name="ux_fn_ship_notif_sgtin">
+                    <xs:selector xpath="sgtin"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+                <xs:unique name="ux_fn_ship_notif_sscc">
+                    <xs:selector xpath="sscc"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="state" type="export_state_info_type"> </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
