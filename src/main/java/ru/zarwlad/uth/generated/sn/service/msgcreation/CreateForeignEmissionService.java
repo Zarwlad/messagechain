@@ -7,6 +7,7 @@ import ru.zarwlad.uth.generated.sn.constants.LegalEntityConst;
 import ru.zarwlad.uth.generated.sn.storeddata.model.Batch;
 import ru.zarwlad.uth.generated.sn.storeddata.model.BusinessPartner;
 import ru.zarwlad.uth.generated.sn.storeddata.model.LegalEntity;
+import ru.zarwlad.uth.generated.sn.storeddata.model.Location;
 import ru.zarwlad.uth.generated.sn.storeddata.model.hierarchy.HieEntry;
 import ru.zarwlad.uth.generated.sn.util.DateTimeUtil;
 
@@ -18,7 +19,7 @@ import java.util.GregorianCalendar;
 import java.util.stream.Collectors;
 
 public class CreateForeignEmissionService {
-    public static Documents createForeignEmi(LegalEntity legalEntity,
+    public static Documents createForeignEmi(Location location,
                                              BusinessPartner control,
                                              BusinessPartner packer,
                                              Batch b,
@@ -30,7 +31,7 @@ public class CreateForeignEmissionService {
         ForeignEmission foreignEmission = new ForeignEmission();
         doc.setForeignEmission(foreignEmission);
 
-        foreignEmission.setSubjectId(legalEntity.getCounterpartyId());
+        foreignEmission.setSubjectId(location.getLocationId());
         foreignEmission.setOperationDate(DateTimeUtil.getGDateNow());
         foreignEmission.setExternalOperationId(externalOperationId);
 
