@@ -7,6 +7,9 @@ import ru.zarwlad.uth.generated.sn.constants.BusinessPartnerConst;
 import ru.zarwlad.uth.generated.sn.constants.LegalEntityConst;
 import ru.zarwlad.uth.generated.sn.constants.LocationConst;
 import ru.zarwlad.uth.generated.sn.storeddata.model.Batch;
+import ru.zarwlad.uth.generated.sn.storeddata.model.BusinessPartner;
+import ru.zarwlad.uth.generated.sn.storeddata.model.LegalEntity;
+import ru.zarwlad.uth.generated.sn.storeddata.model.Location;
 import ru.zarwlad.uth.generated.sn.storeddata.model.hierarchy.HieEntry;
 import ru.zarwlad.uth.generated.sn.util.DateTimeUtil;
 
@@ -18,7 +21,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateForeignShipmentService {
-    public static Documents createForeignShip(List<HieEntry> pallets, String docNum, LocalDate docDate){
+    public static Documents createForeignShip(List<HieEntry> pallets,
+                                              String docNum,
+                                              LocalDate docDate,
+                                              String extermalOperationId,
+                                              BusinessPartner seller,
+                                              Location customLocation,
+                                              Location senderLocation,
+                                              LegalEntity receiver){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         Documents doc = new Documents();
@@ -26,20 +36,21 @@ public class CreateForeignShipmentService {
         doc.setForeignShipment(foreignShipment);
 
         foreignShipment.setContractType(1);
-        foreignShipment.setCustomReceiverId(LocationConst.customZone.getLocationId());
+        foreignShipment.setExternalOperationId(extermalOperationId);
+        foreignShipment.setCustomReceiverId(customLocation.getLocationId());
         foreignShipment.setDocNum(docNum);
         foreignShipment.setDocDate(docDate.toString());
         foreignShipment.setOperationDate(DateTimeUtil.getGDateNow());
-        foreignShipment.setSellerId(BusinessPartnerConst.businessPartner.getCounterpartyId());
-        foreignShipment.setReceiverId(LegalEntityConst.legalEntity2.getCounterpartyId());
-        foreignShipment.setSubjectId(LegalEntityConst.legalEntity1.getCounterpartyId());
+        foreignShipment.setSellerId(seller.getCounterpartyId());
+        foreignShipment.setReceiverId(receiver.getCounterpartyId());
+        foreignShipment.setSubjectId(senderLocation.getLocationId());
 
         ForeignShipment.OrderDetails orderDetails = createOrderDetails(pallets);
         foreignShipment.setOrderDetails(orderDetails);
 
         return doc;
     }
-    
+
     private static ForeignShipment.OrderDetails createOrderDetails (List<HieEntry> highLevelCodes){
         ForeignShipment.OrderDetails details = new ForeignShipment.OrderDetails();
 

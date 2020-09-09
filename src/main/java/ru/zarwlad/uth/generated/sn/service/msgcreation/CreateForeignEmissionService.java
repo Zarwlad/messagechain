@@ -5,6 +5,8 @@ import ru.zarwlad.uth.generated.sn.ForeignEmission;
 import ru.zarwlad.uth.generated.sn.constants.BusinessPartnerConst;
 import ru.zarwlad.uth.generated.sn.constants.LegalEntityConst;
 import ru.zarwlad.uth.generated.sn.storeddata.model.Batch;
+import ru.zarwlad.uth.generated.sn.storeddata.model.BusinessPartner;
+import ru.zarwlad.uth.generated.sn.storeddata.model.LegalEntity;
 import ru.zarwlad.uth.generated.sn.storeddata.model.hierarchy.HieEntry;
 import ru.zarwlad.uth.generated.sn.util.DateTimeUtil;
 
@@ -16,18 +18,24 @@ import java.util.GregorianCalendar;
 import java.util.stream.Collectors;
 
 public class CreateForeignEmissionService {
-    public static Documents createForeignEmi(Batch b, HieEntry pallet){
+    public static Documents createForeignEmi(LegalEntity legalEntity,
+                                             BusinessPartner control,
+                                             BusinessPartner packer,
+                                             Batch b,
+                                             HieEntry pallet,
+                                             String externalOperationId){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         Documents doc = new Documents();
         ForeignEmission foreignEmission = new ForeignEmission();
         doc.setForeignEmission(foreignEmission);
 
-        foreignEmission.setSubjectId(LegalEntityConst.legalEntity.getCounterpartyId());
+        foreignEmission.setSubjectId(legalEntity.getCounterpartyId());
         foreignEmission.setOperationDate(DateTimeUtil.getGDateNow());
+        foreignEmission.setExternalOperationId(externalOperationId);
 
-        foreignEmission.setPackingId(BusinessPartnerConst.businessPartner.getCounterpartyId());
-        foreignEmission.setControlId(BusinessPartnerConst.businessPartner.getCounterpartyId());
+        foreignEmission.setPackingId(control.getCounterpartyId());
+        foreignEmission.setControlId(packer.getCounterpartyId());
         foreignEmission.setSeriesNumber(b.getBatch());
         foreignEmission.setExpirationDate(b.getDateExp().format(formatter));
         foreignEmission.setGtin(b.getTradeItem().getGtin());

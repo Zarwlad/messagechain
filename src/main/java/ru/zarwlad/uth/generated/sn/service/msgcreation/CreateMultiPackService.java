@@ -3,17 +3,23 @@ package ru.zarwlad.uth.generated.sn.service.msgcreation;
 import ru.zarwlad.uth.generated.sn.Documents;
 import ru.zarwlad.uth.generated.sn.MultiPack;
 import ru.zarwlad.uth.generated.sn.constants.LegalEntityConst;
+import ru.zarwlad.uth.generated.sn.storeddata.model.LegalEntity;
+import ru.zarwlad.uth.generated.sn.storeddata.model.Location;
 import ru.zarwlad.uth.generated.sn.storeddata.model.hierarchy.HieEntry;
 import ru.zarwlad.uth.generated.sn.util.DateTimeUtil;
 
 import java.util.stream.Collectors;
 
 public class CreateMultiPackService {
-    public static Documents createMultiPack (boolean aggSscc, HieEntry pallet){
+    public static Documents createMultiPack (boolean aggSscc,
+                                             HieEntry pallet,
+                                             Location packingLoc,
+                                             String externalOperationId){
         Documents doc = new Documents();
         MultiPack multiPack = new MultiPack();
-        multiPack.setSubjectId(LegalEntityConst.legalEntity.getCounterpartyId());
+        multiPack.setSubjectId(packingLoc.getLocationId());
         multiPack.setOperationDate(DateTimeUtil.getGDateNow());
+        multiPack.setExternalOperationId(externalOperationId);
         doc.setMultiPack(multiPack);
 
         if (!aggSscc){
