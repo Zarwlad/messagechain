@@ -14,7 +14,7 @@ import java.util.List;
 public class CreateIncomeAcceptService {
     public static Documents createIncomeAccept(List<HieEntry> pallets,
                                                String docNum,
-                                               LocalDate docDate,
+                                               String docDate,
                                                String extermalOperationId,
                                                Location receiverLocation,
                                                Location senderLocation){
@@ -22,7 +22,7 @@ public class CreateIncomeAcceptService {
         Accept accept = new Accept();
         accept.setConfirmPaused(false);
         accept.setCounterpartyId(senderLocation.getLocationId());
-        accept.setDocDate(docDate.toString());
+        accept.setDocDate(docDate);
         accept.setDocNum(docNum);
         accept.setOperationDate(DateTimeUtil.getGDateNow());
         accept.setExternalOperationId(extermalOperationId);

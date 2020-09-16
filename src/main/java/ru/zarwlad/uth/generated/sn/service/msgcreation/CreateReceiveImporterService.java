@@ -16,21 +16,21 @@ public class CreateReceiveImporterService {
     public static Documents createReceiveImporter(List<HieEntry> pallets,
                                                   Location location,
                                                   String invoiceNum,
-                                                  LocalDate invoceDate,
+                                                  String invoceDate,
                                                   String externalOperationId,
                                                   Location customLocation,
                                                   String docNum,
-                                                  LocalDate docDate){
+                                                  String docDate){
         Documents documents = new Documents();
         ReceiveImporter receiveImporter = new ReceiveImporter();
         receiveImporter.setSubjectId(location.getLocationId());
         receiveImporter.setOperationDate(DateTimeUtil.getGDateNow());
-        receiveImporter.setInvoiceDate(invoceDate.toString());
-        receiveImporter.setInvoiceDate(invoiceNum);
+        receiveImporter.setInvoiceDate(invoceDate);
+        receiveImporter.setInvoiceNum(invoiceNum);
         receiveImporter.setExternalOperationId(externalOperationId);
 
         receiveImporter.setCustomShipperId(customLocation.getLocationId());
-        receiveImporter.setDocDate(docDate.toString());
+        receiveImporter.setDocDate(docDate);
         receiveImporter.setDocNum(docNum);
         receiveImporter.setOrderDetails(createOrderDetails(pallets));
         documents.setReceiveImporter(receiveImporter);
@@ -64,7 +64,10 @@ public class CreateReceiveImporterService {
                     return detail;
                 })
                 .collect(Collectors.toList());
+        ssccDetail.getDetail().addAll(detailList);
         union.setSsccDetail(ssccDetail);
+        union.setCostTaxes(BigDecimal.TEN);
+        union.setVatValue(BigDecimal.ONE);
         return union;
     }
 

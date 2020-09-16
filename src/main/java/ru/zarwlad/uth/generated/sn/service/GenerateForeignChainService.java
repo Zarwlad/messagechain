@@ -2,9 +2,9 @@ package ru.zarwlad.uth.generated.sn.service;
 
 import ru.zarwlad.uth.generated.sn.Documents;
 import ru.zarwlad.uth.generated.sn.defconfigs.DefImportConfig1;
-import ru.zarwlad.uth.generated.sn.service.msgcreation.CreateForeignEmissionService;
-import ru.zarwlad.uth.generated.sn.service.msgcreation.CreateMultiPackService;
+import ru.zarwlad.uth.generated.sn.service.msgcreation.*;
 import ru.zarwlad.uth.generated.sn.storeddata.model.hierarchy.HieEntry;
+import ru.zarwlad.uth.generated.sn.util.DateTimeUtil;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -15,18 +15,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class GenerateForeignChainService {
     public static void generateChainViaDefImportConfig1() throws JAXBException, IOException {
         int palCount = 32;
-        int boxCount = 60;
-        int sgtinsInBox = 600;
+        int boxCount = 72;
+        int sgtinsInBox = 72;
 
-        String externalOperationId = "1";
+        String externalOperationId = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_hh_mm_ss"));
 
         JAXBContext context = JAXBContext.newInstance(Documents.class);
 
@@ -45,7 +44,7 @@ public class GenerateForeignChainService {
         for (HieEntry pallet : pallets) {
             System.out.println("создаю 321 + 915е для кода " + pallet.getCode());
             String sname = pallet.getCode();
-            Path fEmiFileName = Paths.get(folder + "321_st-format_" + sname + ".xml");
+            Path fEmiFileName = Paths.get(folder + "321-st_format_" + externalOperationId + "_" + sname + ".xml");
             Files.createFile(fEmiFileName);
 
             Documents fEmi = CreateForeignEmissionService.createForeignEmi(
@@ -64,7 +63,7 @@ public class GenerateForeignChainService {
                     false,
                     pallet,DefImportConfig1.foreignMahloc,
                     externalOperationId);
-            Path mPackSgtinFileName = Paths.get(folder + "915_st-format_sgtins_" + sname + ".xml");
+            Path mPackSgtinFileName = Paths.get(folder + "915-st_format_sgtins_" + externalOperationId + "_" + sname + ".xml");
             Files.createFile(mPackSgtinFileName);
 
             marshaller.marshal(mPackSgtin, mPackSgtinFileName.toFile());
@@ -73,10 +72,62 @@ public class GenerateForeignChainService {
                     true,
                     pallet,DefImportConfig1.foreignMahloc,
                     externalOperationId);
-            Path mPackSsccFileName = Paths.get(folder + "915_st-format_sscc_" + sname + ".xml");
+            Path mPackSsccFileName = Paths.get(folder + "915-st_format_sscc_" + externalOperationId + "_" + sname + ".xml");
             Files.createFile(mPackSsccFileName);
             marshaller.marshal(mPackSscc, mPackSsccFileName.toFile());
         }
+
+        Documents forShip = CreateForeignShipmentService.createForeignShip(
+                pallets,
+                DefImportConfig1.invoiceNum,
+                DefImportConfig1.invoiceDate,
+                externalOperationId,
+                DefImportConfig1.seller,
+                DefImportConfig1.customZone,
+                DefImportConfig1.foreignMahloc,
+                DefImportConfig1.russianMahloc.getLegalEntity());
+        Path fShipFileName = Paths.get(folder + "331-st_format_" + externalOperationId + ".xml");
+        marshaller.marshal(forShip, fShipFileName.toFile());
+
+        Documents foreignAccept = CreateIncomeAcceptService.createIncomeAccept(
+                pallets,
+                DefImportConfig1.invoiceNum,
+                DefImportConfig1.invoiceDate,
+                externalOperationId,
+                DefImportConfig1.customZone,
+                DefImportConfig1.foreignMahloc);
+        Path fAcceptFileName = Paths.get(folder + "701-st_format_" + externalOperationId + ".xml");
+        marshaller.marshal(foreignAccept, fAcceptFileName.toFile());
+
+
+        Documents ftsData = CreateFtsDataService.createFtsData(
+                pallets,
+                DefImportConfig1.customZone,
+                DefImportConfig1.invoiceNum,
+                DefImportConfig1.invoiceDate,
+                externalOperationId,
+                DefImportConfig1.baseConfnumInfoType);
+        Path ftsDataFileName = Paths.get(folder + "335-st_format_" + externalOperationId + ".xml");
+        marshaller.marshal(ftsData, ftsDataFileName.toFile());
+
+        Documents receiveImporter = CreateReceiveImporterService.createReceiveImporter(
+                pallets,
+                DefImportConfig1.russianMahloc,
+                DefImportConfig1.invoiceNum,
+                DefImportConfig1.invoiceDate,
+                externalOperationId,
+                DefImportConfig1.customZone,
+                DefImportConfig1.whAcceptNum,
+                DefImportConfig1.whAcceptDate);
+        Path receiveImporterFileName = Paths.get(folder + "341-st_format_" + externalOperationId + ".xml");
+        marshaller.marshal(receiveImporter, receiveImporterFileName.toFile());
+
+        Documents releaseInCirc = CreateReleaseInCirculationService.createReleaseInCirc(
+                pallets,
+                DefImportConfig1.russianMahloc,
+                externalOperationId);
+        Path releaseInCircFileName = Paths.get(folder + "342-st_format_" + externalOperationId + ".xml");
+        marshaller.marshal(releaseInCirc, releaseInCircFileName.toFile());
 
         ZonedDateTime end = ZonedDateTime.now();
         System.out.println(end);

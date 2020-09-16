@@ -17,22 +17,22 @@ public class CreateFtsDataService {
     public static Documents createFtsData(List<HieEntry> pallets,
                                           Location location,
                                           String invoiceNum,
-                                          LocalDate invoceDate,
+                                          String invoceDate,
                                           String externalOperationId,
                                           BaseConfnumInfoType confnumInfoType){
         Documents documents = new Documents();
         FtsData ftsData = new FtsData();
         ftsData.setSubjectId(location.getLocationId());
         ftsData.setOperationDate(DateTimeUtil.getGDateNow());
-        ftsData.setInvoiceDate(invoceDate.toString());
-        ftsData.setInvoiceDate(invoiceNum);
+        ftsData.setInvoiceDate(invoceDate);
+        ftsData.setInvoiceNum(invoiceNum);
         ftsData.setExternalOperationId(externalOperationId);
         ftsData.setCustomProcedureCode("40");
 
         BaseFtsInfoType baseFtsInfoType = new BaseFtsInfoType();
         baseFtsInfoType.setCustomsCode("10130060");
         baseFtsInfoType.setGtdNumber("testTd");
-        baseFtsInfoType.setRegistrationDate("2020-04-16");
+        baseFtsInfoType.setRegistrationDate("08.08.2020");
         ftsData.setFtsInfo(baseFtsInfoType);
 
         ftsData.setOrderDetails(createOrderDetails(pallets, confnumInfoType));
@@ -60,14 +60,16 @@ public class CreateFtsDataService {
 
         List<FtsData.OrderDetails.Union.SsccDetail.Detail> detailList = batches.stream()
                 .map(x -> {
-            FtsData.OrderDetails.Union.SsccDetail.Detail detail =  new FtsData.OrderDetails.Union.SsccDetail.Detail();
-            detail.setGtin(x.getTradeItem().getGtin());
-            detail.setSeriesNumber(x.getBatch());
-            detail.setConfnumInfo(confnumInfoType);
-            detail.setCustomsValue(BigDecimal.TEN);
-            return detail;
-        })
-        .collect(Collectors.toList());
+                    FtsData.OrderDetails.Union.SsccDetail.Detail detail =  new FtsData.OrderDetails.Union.SsccDetail.Detail();
+                    detail.setGtin(x.getTradeItem().getGtin());
+                    detail.setSeriesNumber(x.getBatch());
+                    detail.setConfnumInfo(confnumInfoType);
+                    detail.setCustomsValue(BigDecimal.TEN);
+                    return detail;
+                })
+                .collect(Collectors.toList());
+        ssccDetail.getDetail().addAll(detailList);
+
         union.setSsccDetail(ssccDetail);
         union.setCustomsValue(BigDecimal.TEN);
         union.setConfnumInfo(confnumInfoType);

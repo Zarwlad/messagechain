@@ -25,7 +25,7 @@ public class CreateForeignEmissionService {
                                              Batch b,
                                              HieEntry pallet,
                                              String externalOperationId){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         Documents doc = new Documents();
         ForeignEmission foreignEmission = new ForeignEmission();

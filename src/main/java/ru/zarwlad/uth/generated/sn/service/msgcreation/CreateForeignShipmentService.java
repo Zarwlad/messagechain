@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class CreateForeignShipmentService {
     public static Documents createForeignShip(List<HieEntry> pallets,
                                               String docNum,
-                                              LocalDate docDate,
+                                              String docDate,
                                               String extermalOperationId,
                                               BusinessPartner seller,
                                               Location customLocation,
@@ -39,7 +39,7 @@ public class CreateForeignShipmentService {
         foreignShipment.setExternalOperationId(extermalOperationId);
         foreignShipment.setCustomReceiverId(customLocation.getLocationId());
         foreignShipment.setDocNum(docNum);
-        foreignShipment.setDocDate(docDate.toString());
+        foreignShipment.setDocDate(docDate);
         foreignShipment.setOperationDate(DateTimeUtil.getGDateNow());
         foreignShipment.setSellerId(seller.getCounterpartyId());
         foreignShipment.setReceiverId(receiver.getCounterpartyId());

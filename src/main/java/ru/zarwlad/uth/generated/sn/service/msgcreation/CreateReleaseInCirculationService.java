@@ -26,7 +26,7 @@ public class CreateReleaseInCirculationService {
         ReleaseInCirculation.ReleaseInfo releaseInfo = new ReleaseInCirculation.ReleaseInfo();
         releaseInfo.setConfirmationNum("testConNum");
         releaseInfo.setDocNum("test");
-        releaseInfo.setDocDate("2020-01-01");
+        releaseInfo.setDocDate("01.01.2020");
 
         releaseInCirculation.setReleaseInfo(releaseInfo);
         releaseInCirculation.setSigns(createSigns(pallets));
